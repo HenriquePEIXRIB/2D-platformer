@@ -9,12 +9,16 @@ public class input : MonoBehaviour
     [SerializeField] InputActionReference _jumpInput;
     [SerializeField] Transform _root;
     [SerializeField] float _speed;
+    [SerializeField] int _saut;
     [SerializeField] Animator _animator;
+    [SerializeField] Rigidbody2D _rb;
 
     Vector2 _playerMovement;
 
+    
 
-    private void Start()
+
+    void Start()
     {
         //Move
         _moveInput.action.started += StartMove;
@@ -29,12 +33,23 @@ public class input : MonoBehaviour
     {
         //Movement
         Vector2 direction = new Vector2(_playerMovement.x, 0);
-        _root.transform.Translate(_playerMovement * Time.fixedDeltaTime * _speed);
+        _root.transform.Translate(direction * Time.fixedDeltaTime * _speed, Space.World);
+
+        //Rotation
+        if (direction.x < 0)
+        _root.rotation = Quaternion.Euler (0, 180, 0);
+
+        if (direction.x > 0)
+            _root.rotation = Quaternion.Euler (0, 0, 0);
+
+        //Jump
+
 
         //Animator
-        if(direction.x > 0) // Si on bouge
+        if (direction.x > 0) // Si on bouge
         {
             _animator.SetBool("IsWaiting", true);
+
         }
         else  //Sinon c'est que l'on ne bouge pas donc false
         {
@@ -70,6 +85,8 @@ public class input : MonoBehaviour
         //Vector2 direction = obj.ReadValue<Vector2>();
 
         Debug.Log("Jump");
+        _rb.AddForce(new Vector2(0, _saut));
+
     }
 
 
