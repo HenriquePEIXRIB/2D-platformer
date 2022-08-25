@@ -9,6 +9,7 @@ public class input : MonoBehaviour
     [SerializeField] InputActionReference _jumpInput;
     [SerializeField] Transform _root;
     [SerializeField] float _speed;
+    [SerializeField] Animator _animator;
 
     Vector2 _playerMovement;
 
@@ -26,7 +27,20 @@ public class input : MonoBehaviour
 
     void Update()
     {
-        _root.transform.Translate(_playerMovement * Time.deltaTime * _speed);
+        //Movement
+        Vector2 direction = new Vector2(_playerMovement.x, 0);
+        _root.transform.Translate(_playerMovement * Time.fixedDeltaTime * _speed);
+
+        //Animator
+        if(direction.x > 0) // Si on bouge
+        {
+            _animator.SetBool("IsWaiting", true);
+        }
+        else  //Sinon c'est que l'on ne bouge pas donc false
+        {
+            _animator.SetBool("IsWalking", false);
+        }
+
     }
 
 
